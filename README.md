@@ -44,4 +44,4 @@ Akun admin contoh: `admin@example.com` dengan password `admin123`.
 
 - Data di `database/tugasakhir.sql` seluruhnya fiktif. Gambar dan dokumen contoh yang dirujuk data tersebut belum ada di folder `admin/images/` dan `admin/docs/`, jadi unggah sendiri lewat panel admin.
 - Dokumen bimbingan yang diunggah disimpan di `admin/docs/` dan sengaja tidak masuk ke Git karena bisa berisi data pribadi.
-- Konfigurasi database bawaan hanya untuk pengembangan lokal. Login admin masih membandingkan password apa adanya, jadi aplikasi ini belum layak dipakai di server publik.
+- Konfigurasi database bawaan hanya untuk pengembangan lokal. Login admin sudah memakai prepared statement dan password ter-hash (bcrypt). Password lama yang masih teks biasa otomatis diubah menjadi hash saat login berikutnya. Namun halaman admin lainnya masih menyusun query langsung dari input pengguna (rentan SQL injection), jadi aplikasi ini belum layak dipakai di server publik.

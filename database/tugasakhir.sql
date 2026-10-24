@@ -1,5 +1,5 @@
 -- Struktur database Tugas Akhir dengan data contoh (fiktif).
--- Akun admin contoh: admin@example.com / admin123 (ganti sebelum dipakai sungguhan).
+-- Akun admin contoh: admin@example.com / admin123 (disimpan sebagai hash bcrypt; ganti sebelum dipakai sungguhan).
 
 CREATE DATABASE IF NOT EXISTS `tugasakhir` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `tugasakhir`;
@@ -165,7 +165,7 @@ CREATE TABLE `ujianskripsi` (
 --
 
 INSERT INTO `admin` (`admin_ID`, `admin_USER`, `admin_PASS`) VALUES
-('11', 'admin@example.com', 'admin123');
+('11', 'admin@example.com', '$2y$10$yeElD9b59GKEKpwNUa5X3e7/XSLKwTeOhd2DpzFsV8S.V9OR.6dzm');
 
 INSERT INTO `dosen` (`dosen_NIDN`, `dosen_NIK`, `dosen_Nama`, `dosen_Ket`) VALUES
 ('10010001', '31720001', 'Dosen Contoh Satu', 'S2 Universitas Contoh'),
