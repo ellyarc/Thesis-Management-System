@@ -1,0 +1,12 @@
+# Dokumen bimbingan yang diunggah (bisa berisi data pribadi)
+admin/docs/*.pdf
+admin/docs/*.doc
+admin/docs/*.docx
+
+# IDE
+.idea/
+.vscode/
+
+# Sistem operasi
+.DS_Store
+Thumbs.db
