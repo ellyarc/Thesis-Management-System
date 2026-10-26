@@ -12,11 +12,34 @@ if (isset($_POST["login"])) {
     $useremail = $_POST["user"];
     $userpass = $_POST["pass"];
 
-    $sql_login = mysqli_query($conn, "SELECT * FROM admin 
-        WHERE admin_USER = '$useremail' AND admin_PASS = '$userpass'");
+    // Prepared statement: input pengguna tidak pernah digabung ke teks query
+    $stmt = mysqli_prepare($conn, "SELECT admin_ID, admin_USER, admin_PASS FROM admin WHERE admin_USER = ?");
+    mysqli_stmt_bind_param($stmt, "s", $useremail);
+    mysqli_stmt_execute($stmt);
+    $row_admin = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+    mysqli_stmt_close($stmt);
 
-    if (mysqli_num_rows($sql_login) > 0) {
-        $row_admin = mysqli_fetch_array($sql_login);
+    $valid = false;
+    if ($row_admin) {
+        $stored = rtrim($row_admin["admin_PASS"]);
+        if (password_get_info($stored)["algoName"] !== "unknown") {
+            // Password sudah berupa hash
+            $valid = password_verify($userpass, $stored);
+        } else {
+            // Password lama masih teks biasa: terima sekali, lalu ubah menjadi hash
+            $valid = hash_equals($stored, $userpass);
+            if ($valid) {
+                $hash = password_hash($userpass, PASSWORD_DEFAULT);
+                $upd = mysqli_prepare($conn, "UPDATE admin SET admin_PASS = ? WHERE admin_ID = ?");
+                mysqli_stmt_bind_param($upd, "ss", $hash, $row_admin["admin_ID"]);
+                mysqli_stmt_execute($upd);
+                mysqli_stmt_close($upd);
+            }
+        }
+    }
+
+    if ($valid) {
+        session_regenerate_id(true);
         $_SESSION["useremail"] = $row_admin["admin_USER"];
         header("location: dashboard.php");
         exit();
@@ -24,8 +47,6 @@ if (isset($_POST["login"])) {
         echo "<script>alert('Email atau password salah!');</script>";
     }
 }
-?>
-
 ?>
 <!DOCTYPE html>
 <html lang="id">
